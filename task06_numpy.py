@@ -1,32 +1,30 @@
-# Task 06: NumPy
-
 import math
-
 import numpy as np
 
-
 def rotation_matrix_2d(theta):
-    return np.array([[1, 0], [0, 1]])
-
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[c, -s], [s, c]])
 
 def rotation_matrix_2d_degree(deg):
-    return rotation_matrix_2d(0)
-
+    theta = np.deg2rad(deg)
+    return rotation_matrix_2d(theta)
 
 def distance(p1, p2):
-    return 0
-
+    return np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
 def rotate(p, theta):
-    return (0, 0)
+    rm = rotation_matrix_2d(theta)
+    rotated_p = np.dot(rm, np.array(p))
+    # Round small values to zero
+    rotated_p = np.round(rotated_p, decimals=10)  # Adjust decimals as needed
+    return tuple(rotated_p)
 
-
-if __name__ == "__main__":  # the main part
-    print(rotation_matrix_2d(math.pi))
-    print(rotation_matrix_2d_degree(180))
+if __name__ == "__main__":
+    print('2D Rotation Matrix for PI radians:', rotation_matrix_2d(math.pi))
+    print('2D Rotation Matrix for 180 degrees:', rotation_matrix_2d_degree(180))
     p1 = (7, 3)
     p2 = (3, 0)
     d = distance(p1, p2)
-    print(d)  # should give 5
+    print('Distance between points:', d)  # should give 5
     p2_new = rotate(p2, math.pi / 2)  # should give (0, 3)
-    print(p2_new)
+    print('Point after rotation:', p2_new)

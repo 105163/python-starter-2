@@ -1,68 +1,52 @@
-# Task 07: Matrix
-
 import numpy as np
 
-
 def is_square(m):
-    # hint: use m.shape
-    if 1 + 2 == 3:
-        return True
-    else:
-        return False
-
+    return m.shape[0] == m.shape[1]
 
 def is_symmetric(m):
-    # hint: first, use your codes above.
-    return False
-
+    if not is_square(m):
+        return False
+    return np.array_equal(m, m.T)
 
 def is_skew_symmetric(m):
-    return False
-
+    if not is_square(m):
+        return False
+    return np.array_equal(m, -m.T)
 
 def is_upper_triangular(m):
-    return False
-
+    if not is_square(m):
+        return False
+    return np.allclose(m, np.triu(m))
 
 def is_lower_triangular(m):
-    # Hint: NumPy can transpose a matrix. Read the manual.
-    return False
-
+    if not is_square(m):
+        return False
+    return np.allclose(m, np.tril(m))
 
 def is_diagonal(m):
-    # hint: you can use your codes above
-    return False
-
+    if not is_square(m):
+        return False
+    return np.allclose(m, np.diag(np.diag(m)))
 
 def classify_linear_system(aug):
-    return "unique"
-
+    # Simplified classification using rank comparison
+    rows, cols = aug.shape
+    if cols - 1 > rows:
+        return "none"
+    rank_full = np.linalg.matrix_rank(aug)
+    rank_coeff = np.linalg.matrix_rank(aug[:, :-1])
+    if rank_full != rank_coeff:
+        return "none"
+    elif rank_full == cols - 1:
+        return "unique"
+    else:
+        return "many"
 
 if __name__ == "__main__":
     matrix = np.array([[1, 2], [3, 4]])
-    print(is_square(matrix))
-    print(is_symmetric(matrix))
-    print(is_skew_symmetric(matrix))
-    print(is_upper_triangular(matrix))
-    print(is_upper_triangular(matrix))
-    print(is_diagonal(matrix))
-
-    # we can loop over functions!
-    identity = np.array([[1, 0], [0, 1]])
-    testers = [
-        is_square,
-        is_symmetric,
-        is_skew_symmetric,
-        is_upper_triangular,
-        is_lower_triangular,
-        is_diagonal,
-    ]
-    for tester in testers:
-        print(tester(identity))
-
-    augmented = np.array([[1, 2, 3], [4, 5, 6]])
-    print(classify_linear_system(augmented))  # "unique"
-    augmented = np.array([[1, 2, 3], [2, 4, 6]])
-    print(classify_linear_system(augmented))  # "many"
-    augmented = np.array([[1, 2, 3], [2, 4, 7]])
-    print(classify_linear_system(augmented))  # "none"
+    print("Square:", is_square(matrix))
+    print("Symmetric:", is_symmetric(matrix))
+    print("Skew Symmetric:", is_skew_symmetric(matrix))
+    print("Upper Triangular:", is_upper_triangular(matrix))
+    print("Lower Triangular:", is_lower_triangular(matrix))
+    print("Diagonal:", is_diagonal(matrix))
